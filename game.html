@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Игра</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Игра</h1>
+        <div class="news-categories">
+            <a href="index.html" class="notlastnews">Главная</a>
+            <a href="ruandua.html" class="notlastnews">Россия-Украина</a>
+            <a href="politic.html" class="notlastnews">Политика</a>
+            <a href="game.html" class="notlastnews">Играть</a>
+            <a href="login.html" class="notlastnews">Войти</a>
+            <a href="aboutcreator.html" class="notlastnews">О разработчике</a>
+        </div>
+        <div class="game">
+<section id="game" class="game-container">
+    <h2>Игра "Крестики-Нолики"</h2>
+    <div class="game-board">
+        <div class="cell" data-index="0"></div>
+        <div class="cell" data-index="1"></div>
+        <div class="cell" data-index="2"></div>
+        <div class="cell" data-index="3"></div>
+        <div class="cell" data-index="4"></div>
+        <div class="cell" data-index="5"></div>
+        <div class="cell" data-index="6"></div>
+        <div class="cell" data-index="7"></div>
+        <div class="cell" data-index="8"></div>
+    </div>
+    <p id="game-status">Ход игрока: <span id="current-player">X</span></p>
+    <button id="reset-btn">Сбросить игру</button>
+</section>
+<script>
+    const cells = document.querySelectorAll('.cell');
+    const currentPlayerElement = document.getElementById('current-player');
+    const resetButton = document.getElementById('reset-btn');
+    let currentPlayer = 'X';
+    let gameBoard = ['', '', '', '', '', '', '', '', ''];
+
+    const checkWinner = () => {
+        const winPatterns = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8], 
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],
+            [0, 4, 8], [2, 4, 6]  
+        ];
+
+        for (let pattern of winPatterns) {
+            const [a, b, c] = pattern;
+            if (gameBoard[a] && gameBoard[a] === gameBoard[b] && gameBoard[a] === gameBoard[c]) {
+                return gameBoard[a];
+            }
+        }
+
+        if (!gameBoard.includes('')) {
+            return 'draw';
+        }
+
+        return null;
+    };
+
+    const handleCellClick = (index) => {
+        if (gameBoard[index] === '') {
+            gameBoard[index] = currentPlayer;
+            cells[index].textContent = currentPlayer;
+
+            const winner = checkWinner();
+            if (winner) {
+                if (winner === 'draw') {
+                    alert('Ничья!');
+                } else {
+                    alert(`Победитель: ${winner}`);
+                }
+                setTimeout(resetGame, 1000);
+            } else {
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                currentPlayerElement.textContent = currentPlayer;
+            }
+        }
+    };
+
+    const resetGame = () => {
+        gameBoard = ['', '', '', '', '', '', '', '', ''];
+        cells.forEach(cell => cell.textContent = '');
+        currentPlayer = 'X';
+        currentPlayerElement.textContent = currentPlayer;
+    };
+
+    cells.forEach((cell, index) => {
+        cell.addEventListener('click', () => handleCellClick(index));
+    });
+
+    resetButton.addEventListener('click', resetGame);
+</script>
+
+        </div>
+    </header>
